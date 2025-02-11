@@ -1,15 +1,21 @@
-const express = require('express');
-const { resolve } = require('path');
+const cors = require("cors");
+const express = require("express");
+const { getAllEmployees, getEmployeesById } = require("./controllers/index");
 
 const app = express();
-const port = 3010;
+app.use(express.json());
+app.use(cors());
 
-app.use(express.static('static'));
-
-app.get('/', (req, res) => {
-  res.sendFile(resolve(__dirname, 'pages/index.html'));
+app.get("/employees", (req, res) => {
+  const employees = getAllEmployees();
+  res.json({ employees });
+});
+app.get("/employees/details/:id", (req, res) => {
+  const employee = getEmployeesById(parseInt(req.params.id));
+  res.json({ employee });
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+app.listen(3000, () => {
+  console.log("Server started successfully at port 3000");
 });
+module.exports = { app };
